@@ -1,0 +1,50 @@
+version: "3.4"
+services:
+
+  service:
+    restart: always
+    build:
+      dockerfile: ./Dockefile
+      context: ./app/
+      target: development
+    command: npm run start:debug
+    volumes:
+      - ./app:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - microservice
+    ports: # HOST:CONTAINER
+      - 9229:9229
+      - 3000:3000
+    depends_on:
+      - database
+
+  database:
+    image: mariadb:10.5
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "azertyuiop"
+      MYSQL_DATABASE: "authentication"
+      MYSQL_USER: "nestjs"
+      MYSQL_PASSWORD: "grEz<zz}M\\s*Kpf^ey[NRc(D'7rS2jp#"
+    networks:
+      - microservice
+      - database
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  admin-panel:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: "database"
+    ports: # HOST:CONTAINER
+      - 8080:80
+    networks:
+      - database
+
+networks:
+  microservice:
+  database:
+
+volumes:
+  dbdata:
