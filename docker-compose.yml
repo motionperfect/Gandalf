@@ -1,7 +1,7 @@
 version: "3.4"
 services:
 
-  service:
+  microservice:
     restart: always
     build:
       dockerfile: ./Dockefile
@@ -24,13 +24,14 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: "azertyuiop"
-      MYSQL_DATABASE: "authentication"
-      MYSQL_USER: "nestjs"
-      MYSQL_PASSWORD: "grEz<zz}M\\s*Kpf^ey[NRc(D'7rS2jp#"
+      MYSQL_DATABASE: "Authentication"
+      MYSQL_USER: "microservice"
+      MYSQL_PASSWORD: "m*3TN4ATqMXM#VQtsCDKm4W@zKm+pDLr"
     networks:
       - microservice
       - database
     volumes:
+      - ./scripts:/docker-entrypoint-initdb.d/
       - dbdata:/var/lib/mysql
 
   admin-panel:
