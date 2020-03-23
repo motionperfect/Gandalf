@@ -20,26 +20,25 @@ services:
       - database
 
   database:
-    image: mariadb:10.5
+    image: postgres:12-alpine
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: "azertyuiop"
-      MYSQL_DATABASE: "Authentication"
-      MYSQL_USER: "microservice"
-      MYSQL_PASSWORD: "m*3TN4ATqMXM#VQtsCDKm4W@zKm+pDLr"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+      POSTGRES_DB: "Authentication"
+      POSTGRES_USER: "microservice"
+      POSTGRES_PASSWORD: "m*3TN4ATqMXM#VQtsCDKm4W@zKm+pDLr"
     networks:
       - microservice
       - database
     volumes:
       - ./scripts:/docker-entrypoint-initdb.d/
-      - dbdata:/var/lib/mysql
+      - dbdata:/var/lib/postgresql/data
 
   admin-panel:
-    image: phpmyadmin/phpmyadmin:latest
-    environment:
-      PMA_HOST: "database"
-    ports: # HOST:CONTAINER
-      - 8080:80
+    image: adminer:latest
+    restart: always
+    ports:
+      - 8080:8080
     networks:
       - database
 
