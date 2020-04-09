@@ -1,0 +1,202 @@
+swagger: "2.0"
+info:
+  description: "Microservice in charge of verifying user's identities."
+  version: "1.0.0"
+  title: "Authentication service"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "api.motionperfect.eu"
+basePath: "/v1/auth"
+tags:
+  - name: "General"
+    description: "Endpoints for all authentication methods"
+  - name: "Local"
+    description: "Endpoints for password-based authentication method"
+  - name: "OAuth2"
+    description: "Endpoints for 'OpenID Connect' authentication method"
+    externalDocs:
+      description: "Find out more"
+      url: "https://openid.net/connect/"
+schemes:
+  - "https"
+paths:
+  /local/register:
+    post:
+      tags:
+        - "Local"
+      summary: "Sign up a new user"
+      operationId: "LocalRegister"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "user"
+          description: "Informations needed to create user."
+          schema:
+            type: "object"
+            required:
+              - "email"
+              - "password"
+              - "identity"
+              - "badgeToken"
+            properties:
+              email:
+                type: "string"
+                format: "email"
+              password:
+                type: "string"
+              identity:
+                $ref: "#/definitions/Identity"
+              badgeToken:
+                type: "string"
+                example: "1a79a4d60de6718e8e5b326e338ae533"
+      responses:
+        201:
+          description: "Created"
+        400:
+          description: "Invalid inputs"
+        500:
+          description: "Unknown error"
+  /local/login:
+    post:
+      tags:
+        - "Local"
+      summary: "Logs in and returns the authentication cookie"
+      operationId: "LocalLogin"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Object that contain"
+          required: true
+          schema:
+            type: "object"
+            required:
+              - "email"
+              - "password"
+            properties:
+              email:
+                type: "string"
+                format: "email"
+              password:
+                type: "string"
+      responses:
+        200:
+          headers: 
+            Set-Cookie:
+              type: "string"
+              description: "API token"
+          description: "OK"
+        400:
+          description: "Bad request. Missing or invalid inputs"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Unexpected error"
+  /certificates:
+    get:
+      tags:
+      - "General"
+      summary: "Retrieve public keys"
+      description: "Return certificates used by others microservices to verify tokens"
+      operationId: "Certificates"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Certificate"
+        500:
+          description: "Unknown error"
+  /oauth2/connect:
+    get:
+      tags:
+        - "OAuth2"
+      summary: "Logs in and returns the authentication cookie"
+      operationId: "OAuth2Connect"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "query"
+          name: "issuer"
+          type: "integer"
+          description: "OAuth2 Issuer ID"
+        - in: "query"
+          name: "redirect_uri"
+          type: "string"
+          description: "Location where the user will be send to"
+      responses:
+        301:
+          description: "Moved Permanently"
+        400:
+          description: "Bad request. Missing or invalid inputs"
+        404:
+          description: "Not found"
+        500:
+          description: "Unexpected error"
+  /oauth2/issuers:
+    get:
+      tags:
+        - "OAuth2"
+      summary: "Retrieve issuers informations"
+      operationId: "OAuth2Issuers"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Issuer"
+          description: "OK"
+        500:
+          description: "Unexpected error"
+definitions:
+  Identity:
+    type: "object"
+    required: 
+      - "givenName"
+      - "familyName"
+    properties:
+      givenName:
+        type: "string"
+        example: "John"
+      familyName:
+        type: "string"
+        example: "Doe"
+      avatarURL:
+        type: "string"
+        example: "https://cdn.motionperfect.eu/avatar/78805a221a988e79ef3f42d7c5bfd418.jpg"
+  Certificate:
+    type: "object"
+    required: 
+      - "algorithm"
+      - "key"
+    properties:
+      algorithm:
+        type: "string"
+      key:
+        type: "string"
+  Issuer:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+        example: "Google"
+      logoURL:
+        type: "string"
+        example: "https://cdn.motionperfect.eu/logo/78805a221a988e79ef3f42d7c5bfd418.jpg"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
