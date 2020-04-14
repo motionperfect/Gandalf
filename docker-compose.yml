@@ -1,7 +1,7 @@
 version: "3.4"
 services:
 
-  microservice:
+  nestjs:
     restart: always
     build:
       dockerfile: ./Dockefile
@@ -19,22 +19,34 @@ services:
     depends_on:
       - database
 
-  database:
+  postgres:
     image: postgres:12-alpine
-    restart: always
     environment:
       PGDATA: "/var/lib/postgresql/data/pgdata"
       POSTGRES_DB: "Authentication"
-      POSTGRES_USER: "microservice"
-      POSTGRES_PASSWORD: "m*3TN4ATqMXM#VQtsCDKm4W@zKm+pDLr"
+      POSTGRES_USER: "nestjs"
+      POSTGRES_PASSWORD_FILE: "/run/secrets/postgres_password"
+    secrets:
+      - postgres_password
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${PG_USER:-nestjs}"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+    stdin_open: true
+    tty: true
     networks:
       - microservice
       - database
     volumes:
       - ./scripts:/docker-entrypoint-initdb.d/
-      - dbdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
 
-  admin-panel:
+  adminer:
     image: adminer:latest
     restart: always
     ports:
@@ -45,6 +57,11 @@ services:
 networks:
   microservice:
   database:
+    external: false
 
 volumes:
-  dbdata:
+  pgdata: {}
+
+secrets:
+  postgres_password:
+    file: ./POSTGRES_PASSWORD
