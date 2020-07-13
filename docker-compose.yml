@@ -1,67 +1,67 @@
 version: "3.4"
 services:
-
-  nestjs:
-    restart: always
+  #
+  # [ server stack ]
+  #
+  web-server:
+    restart: on-failure
     build:
-      dockerfile: ./Dockefile
       context: ./app/
       target: development
     command: npm run start:debug
     volumes:
+      - ./certs:/usr/src/certs
       - ./app:/usr/src/app
       - /usr/src/app/node_modules
     networks:
-      - microservice
+      - service
     ports: # HOST:CONTAINER
       - 9229:9229
       - 3000:3000
     depends_on:
       - database
+    env_file:
+      - .env
 
-  postgres:
-    image: postgres:12-alpine
-    environment:
-      PGDATA: "/var/lib/postgresql/data/pgdata"
-      POSTGRES_DB: "Authentication"
-      POSTGRES_USER: "nestjs"
-      POSTGRES_PASSWORD_FILE: "/run/secrets/postgres_password"
-    secrets:
-      - postgres_password
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${PG_USER:-nestjs}"]
-      interval: 30s
-      timeout: 30s
-      retries: 3
-    restart: on-failure
-    deploy:
-      restart_policy:
-        condition: on-failure
-    stdin_open: true
-    tty: true
-    networks:
-      - microservice
-      - database
-    volumes:
-      - ./scripts:/docker-entrypoint-initdb.d/
-      - pgdata:/var/lib/postgresql/data
-
-  adminer:
-    image: adminer:latest
-    restart: always
-    ports:
-      - 8080:8080
-    networks:
-      - database
-
-networks:
-  microservice:
   database:
-    external: false
+    image: mysql:8
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ADMIN_PASSWORD}
+      MYSQL_DATABASE: ${DB_SCHEMA}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - service
+      - storage
+    volumes:
+      - databases:/var/lib/mysql
 
+  database-gui:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: ${DB_HOST}
+    ports: # HOST:CONTAINER
+      - 8080:80
+    networks:
+      - storage
+    depends_on:
+      - database
+
+#
+# [ volumes definition ]
+#
+# creates Docker volumes which can be mounted by other containers too e.g. for backup
+#
 volumes:
-  pgdata: {}
+  databases:
+    driver: local
 
-secrets:
-  postgres_password:
-    file: ./POSTGRES_PASSWORD
+#
+# [ networks definition ]
+#
+networks:
+  service:
+    driver: bridge
+  storage:
+    driver: bridge
