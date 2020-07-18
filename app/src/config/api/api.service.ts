@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class APIConfigService {
-  constructor (private configService: ConfigService) {}
+  constructor (private readonly configService: ConfigService) {}
 
   get prefix (): string {
     return this.configService.get<string>("API_PREFIX");

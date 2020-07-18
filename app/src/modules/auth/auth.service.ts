@@ -45,7 +45,7 @@ export class AuthService {
       token_type: "Bearer",
       access_token: await this.jwtService.signAsync({
         sub: loggedUser.id
-      }, { algorithm: "ES256" }),
+      }, { algorithm: "ES256", keyid: this.jwtConfigService.signingKeyId }),
       expires_in: Math.floor(Date.now() / 1000) + expiresIn
     });
   }

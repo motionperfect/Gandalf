@@ -5,16 +5,16 @@ import {
   JwtSecretRequestType
 } from "@nestjs/jwt";
 import { Injectable } from "@nestjs/common";
-import { SignOptions, VerifyOptions } from "jsonwebtoken";
 import { JWK } from "node-jose";
 import { Cron } from "@nestjs/schedule";
+import moment from "moment";
 
 @Injectable()
 export class JWTConfigService implements JwtOptionsFactory {
 
   private readonly keystore = JWK.createKeyStore();
 
-  private currentKey: JWK.Key = null;
+  private currentSigningKey: JWK.Key = null;
 
   constructor (
     private readonly configService: ConfigService
@@ -30,18 +30,8 @@ export class JWTConfigService implements JwtOptionsFactory {
     return this.configService.get<number>("TOKEN_EXPIRATION");
   }
 
-  @Cron("0 0 1 * *")
-  async handleKeyRotation () {
-    const removeFromKeyStore = (key) => this.keystore.remove(key);
-    const ecdsa = await this.keystore.generate("EC", "P-256", {
-      use: "sig",
-      alg: "ES256"
-    });
-
-    if (this.currentKey !== null) {
-      setTimeout(removeFromKeyStore.bind(this), this.lifetime, this.currentKey);
-    }
-    this.currentKey = ecdsa;
+  get signingKeyId (): string {
+    return this.currentSigningKey.kid;
   }
 
   createJwtOptions (): JwtModuleOptions {
@@ -63,20 +53,39 @@ export class JWTConfigService implements JwtOptionsFactory {
     };
   }
 
+  getPublicKeyById (keyId: string): Promise<JWK.Key> {
+    const key = this.keystore.get(keyId);
+
+    if (!key) {
+      return null;
+    }
+    return JWK.asKey(key);
+  }
+
+  @Cron("0 0 1 * *")
+  private async handleKeyRotation () {
+    const removeFromKeyStore = (key) => this.keystore.remove(key);
+    const tokenExpiration = moment.duration(this.lifetime, "seconds");
+    const signingKey = await this.keystore.generate("EC", "P-256", {
+      use: "sig",
+      alg: "ES256"
+    });
+
+    if (this.currentSigningKey !== null) {
+      setTimeout(
+        removeFromKeyStore.bind(this),
+        tokenExpiration.asMilliseconds(),
+        this.currentSigningKey
+      );
+    }
+    this.currentSigningKey = signingKey;
+  }
+
   // TODO: complete implementation with algorithm selection
-  private secretOrKeyProvider (
-    requestType: JwtSecretRequestType,
-    tokenOrPayload: string | Object | Buffer,
-    verifyOrSignOrOptions?: VerifyOptions | SignOptions
-  ) {
+  private secretOrKeyProvider (requestType: JwtSecretRequestType) {
     switch (requestType) {
       case JwtSecretRequestType.SIGN:
-        const signOptions = verifyOrSignOrOptions as SignOptions;
-
-        signOptions.keyid = this.currentKey.kid; // FIXME
-        return this.currentKey.toPEM(true);
-      case JwtSecretRequestType.VERIFY:
-        return this.currentKey.toPEM(false);
+        return this.currentSigningKey.toPEM(true);
     }
   }
 }

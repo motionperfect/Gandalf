@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class DatabaseConfigService {
-  constructor (private configService: ConfigService) {}
+  constructor (private readonly configService: ConfigService) {}
 
   get provider (): any {
     return this.configService.get<string>("DB_PROVIDER");
