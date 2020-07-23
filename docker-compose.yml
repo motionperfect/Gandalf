@@ -10,7 +10,6 @@ services:
       target: development
     command: npm run start:debug
     volumes:
-      - ./certs:/usr/src/certs
       - ./app:/usr/src/app
       - /usr/src/app/node_modules
     networks:
