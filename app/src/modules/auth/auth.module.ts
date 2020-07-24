@@ -4,7 +4,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { AuthService } from "./auth.service";
-import { JwtStrategy, LocalStrategy } from "./strategies";
+import { LocalStrategy } from "./strategies";
 import { AuthController } from "./auth.controller";
 import { LocalAccountEntity } from "./entities";
 
@@ -34,8 +34,7 @@ const Services = [
   controllers: [AuthController],
   providers: [
     ...Services,
-    LocalStrategy,
-    JwtStrategy
+    LocalStrategy
   ],
   exports: [
     ...Services

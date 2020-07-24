@@ -53,15 +53,6 @@ export class JWTConfigService implements JwtOptionsFactory {
     };
   }
 
-  getPublicKeyById (keyId: string): Promise<JWK.Key> {
-    const key = this.keystore.get(keyId);
-
-    if (!key) {
-      return null;
-    }
-    return JWK.asKey(key);
-  }
-
   @Cron("0 0 1 * *")
   private async handleKeyRotation () {
     const removeFromKeyStore = (key) => this.keystore.remove(key);
