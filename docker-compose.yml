@@ -1,10 +1,11 @@
 version: "3.4"
 services:
-
-  microservice:
-    restart: always
+  #
+  # [ server stack ]
+  #
+  web-server:
+    restart: on-failure
     build:
-      dockerfile: ./Dockefile
       context: ./app/
       target: development
     command: npm run start:debug
@@ -12,40 +13,54 @@ services:
       - ./app:/usr/src/app
       - /usr/src/app/node_modules
     networks:
-      - microservice
+      - service
     ports: # HOST:CONTAINER
       - 9229:9229
-      - 3000:3000
+      - 8000:3000
     depends_on:
       - database
+    env_file:
+      - .env
 
   database:
-    image: mariadb:10.5
-    restart: always
+    image: mysql:8
+    restart: on-failure
     environment:
-      MYSQL_ROOT_PASSWORD: "azertyuiop"
-      MYSQL_DATABASE: "Authentication"
-      MYSQL_USER: "microservice"
-      MYSQL_PASSWORD: "m*3TN4ATqMXM#VQtsCDKm4W@zKm+pDLr"
+      MYSQL_ROOT_PASSWORD: ${DB_ADMIN_PASSWORD}
+      MYSQL_DATABASE: ${DB_SCHEMA}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     networks:
-      - microservice
-      - database
+      - service
+      - storage
     volumes:
-      - ./scripts:/docker-entrypoint-initdb.d/
-      - dbdata:/var/lib/mysql
+      - databases:/var/lib/mysql
 
-  admin-panel:
+  database-gui:
     image: phpmyadmin/phpmyadmin:latest
     environment:
-      PMA_HOST: "database"
+      PMA_HOST: ${DB_HOST}
     ports: # HOST:CONTAINER
       - 8080:80
     networks:
+      - storage
+    depends_on:
       - database
 
-networks:
-  microservice:
-  database:
-
+#
+# [ volumes definition ]
+#
+# creates Docker volumes which can be mounted by other containers too e.g. for backup
+#
 volumes:
-  dbdata:
+  databases:
+    driver: local
+
+#
+# [ networks definition ]
+#
+networks:
+  service:
+    driver: bridge
+  storage:
+    driver: bridge
