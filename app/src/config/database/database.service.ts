@@ -1,6 +1,9 @@
 import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
 
+const toTitleCase = s => s.substr(0, 1).toUpperCase()
+  + s.substr(1).toLowerCase();
+
 @Injectable()
 export class DatabaseConfigService {
   constructor (private readonly configService: ConfigService) {}
@@ -26,7 +29,9 @@ export class DatabaseConfigService {
   }
 
   get database (): string {
-    return this.configService.get<string>("DB_SCHEMA");
+    const schema = this.configService.get<string>("DB_SCHEMA");
+
+    return toTitleCase(schema);
   }
 
   get sync (): boolean {

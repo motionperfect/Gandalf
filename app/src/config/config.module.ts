@@ -21,7 +21,8 @@ const Exports = [
 @Module({
   imports: [
     NestConfigModule.forRoot({
-      validationSchema: schema
+      validationSchema: schema,
+      expandVariables: true
     }),
     TypeOrmModule.forRootAsync({
       imports: [DatabaseConfigModule],
