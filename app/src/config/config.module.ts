@@ -34,6 +34,7 @@ const Exports = [
         password: config.password,
         database: config.database,
         entities: ["dist/**/**.entity{.ts,.js}"],
+        retryDelay: 5000,
         synchronize: config.sync
       }),
       inject: [DatabaseConfigService]
