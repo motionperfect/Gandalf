@@ -9,7 +9,7 @@ import {
 
 import { UserEntity } from "../../user/entities";
 
-@Entity({ name: "LocalAccounts" })
+@Entity({ name: "LocalAccounts", synchronize: false })
 export class LocalAccountEntity {
   @OneToOne(
     () => UserEntity,
