@@ -7,16 +7,11 @@ services:
     restart: on-failure
     build:
       context: ./app/
-      target: development
-    command: npm run start:debug
-    volumes:
-      - ./app:/usr/src/app
-      - /usr/src/app/node_modules
+      target: production
     networks:
       - service
     ports: # HOST:CONTAINER
-      - 9229:9229
-      - 8000:3000
+      - 3000:3000
     depends_on:
       - database
     env_file:
@@ -32,20 +27,9 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
     networks:
       - service
-      - storage
     volumes:
+      - ./scripts:/docker-entrypoint-initdb.d
       - databases:/var/lib/mysql
-
-  database-gui:
-    image: phpmyadmin/phpmyadmin:latest
-    environment:
-      PMA_HOST: ${DB_HOST}
-    ports: # HOST:CONTAINER
-      - 8080:80
-    networks:
-      - storage
-    depends_on:
-      - database
 
 #
 # [ volumes definition ]
@@ -61,6 +45,4 @@ volumes:
 #
 networks:
   service:
-    driver: bridge
-  storage:
     driver: bridge
