@@ -129,11 +129,10 @@ ALTER TABLE `Postures`
 --
 -- Table structure
 --
-CREATE TABLE `MSDs`
+CREATE TABLE `Disorders`
 (
     `id`           tinyint UNSIGNED NOT NULL AUTO_INCREMENT,
     `name`         varchar(32)      NOT NULL,
-    `bodyPartId`   tinyint UNSIGNED NOT NULL,
     `creationDate` date             NOT NULL DEFAULT (CURRENT_DATE),
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
@@ -143,14 +142,30 @@ CREATE TABLE `MSDs`
 --
 -- Indexes
 --
-ALTER TABLE `MSDs`
+ALTER TABLE `Disorders`
     ADD UNIQUE `AK_name` (`name`);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure
+--
+CREATE TABLE `DisordersBodyParts`
+(
+    `disorderId`   tinyint UNSIGNED NOT NULL,
+    `bodyPartId`   tinyint UNSIGNED NOT NULL,
+    `creationDate` date             NOT NULL DEFAULT (CURRENT_DATE),
+    PRIMARY KEY (`disorderId`, `bodyPartId`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 
 --
 -- Constraints
 --
-ALTER TABLE `MSDs`
-    ADD CONSTRAINT `FK_MSD_bodyPart` FOREIGN KEY (`bodyPartId`) REFERENCES `BodyParts` (`id`);
+ALTER TABLE `DisordersBodyParts`
+    ADD CONSTRAINT `FK_db_disorder` FOREIGN KEY (`disorderId`) REFERENCES `Disorders` (`id`),
+    ADD CONSTRAINT `FK_db_bodyPart` FOREIGN KEY (`bodyPartId`) REFERENCES `BodyParts` (`id`);
 
 -- --------------------------------------------------------
 
@@ -173,15 +188,15 @@ CREATE TABLE `SickLeaves`
 -- Constraints
 --
 ALTER TABLE `SickLeaves`
-    ADD CONSTRAINT `FK_sickLeave_person` FOREIGN KEY (`personId`) REFERENCES `Persons` (`userId`),
-    ADD CONSTRAINT `FK_sickLeave_MSD` FOREIGN KEY (`disorderId`) REFERENCES `MSDs` (`id`);
+    ADD CONSTRAINT `FK_sl_person` FOREIGN KEY (`personId`) REFERENCES `Persons` (`userId`),
+    ADD CONSTRAINT `FK_sl_disorder` FOREIGN KEY (`disorderId`) REFERENCES `Disorders` (`id`);
 
 -- --------------------------------------------------------
 
 --
 -- Table structure
 --
-CREATE TABLE `MSDPredictions`
+CREATE TABLE `DisorderPredictions`
 (
     `personId`      char(36)         NOT NULL,
     `bodyPartId`    tinyint UNSIGNED NOT NULL,
@@ -195,7 +210,7 @@ CREATE TABLE `MSDPredictions`
 --
 -- Constraints
 --
-ALTER TABLE `MSDPredictions`
+ALTER TABLE `DisorderPredictions`
     ADD CONSTRAINT `FK_MSDP_person` FOREIGN KEY (`personId`) REFERENCES `Persons` (`userId`),
     ADD CONSTRAINT `FK_MSDP_bodyPart` FOREIGN KEY (`bodyPartId`) REFERENCES `BodyParts` (`id`);
 

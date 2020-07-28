@@ -35,13 +35,13 @@ ALTER TABLE `Products`
 --
 CREATE TABLE `Firmwares`
 (
-    `productId`    int UNSIGNED  NOT NULL,
+    `id`           int UNSIGNED  NOT NULL AUTO_INCREMENT,
     `revision`     int UNSIGNED  NOT NULL,
     `description`  text                   DEFAULT NULL,
     `url`          varchar(2048) NOT NULL,
     `sha1`         char(40)      NOT NULL,
     `creationDate` date          NOT NULL DEFAULT (CURRENT_DATE),
-    PRIMARY KEY (`productId`, `revision`)
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -52,11 +52,26 @@ CREATE TABLE `Firmwares`
 ALTER TABLE `Firmwares`
     ADD UNIQUE `AK_sha1` (`sha1`);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure
+--
+CREATE TABLE `ProductsFirmwares`
+(
+    `productId`  int UNSIGNED NOT NULL,
+    `firmwareId` int UNSIGNED NOT NULL,
+    PRIMARY KEY (`productId`, `firmwareId`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
+
 --
 -- Constraints
 --
-ALTER TABLE `Firmwares`
-    ADD CONSTRAINT `FK_firmware_product` FOREIGN KEY (`productId`) REFERENCES `Products` (`id`);
+ALTER TABLE `ProductsFirmwares`
+    ADD CONSTRAINT `FK_pf_product` FOREIGN KEY (`productId`) REFERENCES `Products` (`id`),
+    ADD CONSTRAINT `FK_pf_firmware` FOREIGN KEY (`firmwareId`) REFERENCES `Firmwares` (`id`);
 
 -- --------------------------------------------------------
 
