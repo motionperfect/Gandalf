@@ -131,6 +131,7 @@ dist
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
 
+=======
 ### Windows template
 # Windows thumbnail cache files
 Thumbs.db
