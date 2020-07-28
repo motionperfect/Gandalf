@@ -16,7 +16,7 @@ services:
       - service
     ports: # HOST:CONTAINER
       - 9229:9229
-      - 3000:3000
+      - 8000:3000
     depends_on:
       - database
     env_file:
