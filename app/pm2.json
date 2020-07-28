@@ -1,0 +1,8 @@
+{
+  "name": "Authentication",
+  "script": "dist/main.js",
+  "instances": "2",
+  "env": {
+    "NODE_ENV": "production"
+  }
+}

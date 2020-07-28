@@ -40,11 +40,11 @@
     "passport-local": "^1.0.0",
     "password-validator": "^5.0.3",
     "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
     "typeorm": "^0.2.25"
   },
   "devDependencies": {
+    "rimraf": "^3.0.2",
     "@nestjs/cli": "^7.0.0",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.0",

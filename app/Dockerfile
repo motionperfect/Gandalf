@@ -4,32 +4,37 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
+# Install app dependencies
+ENV NPM_CONFIG_LOGLEVEL warn
+RUN apk add --no-cache make gcc g++ python
 # --only=development
-RUN apk add --no-cache make gcc g++ python && \
-  npm install
-
+RUN npm install --only=development
 RUN npm rebuild bcrypt --build-from-source
 
+# Uninstall building dependencies
 RUN apk del make gcc g++ python
 
-COPY . .
+COPY .env ./
+COPY nest-cli.json ./
+COPY tsconfig*.json ./
+COPY src ./
+
+RUN npm install glob
 
 RUN npm run build
 
-# TODO: change node image by pm2
-FROM node:stable-alpine as production
-
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+FROM keymetrics/pm2:12-alpine as production
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
-
-RUN npm install --only=production
-
-COPY . .
-
+# Bundle APP files
 COPY --from=development /usr/src/app/dist ./dist
+COPY package*.json ./
+COPY pm2.json ./
+COPY .env ./
 
-CMD ["node", "dist/main"]
+# Install app dependencies
+ENV NPM_CONFIG_LOGLEVEL warn
+RUN npm install --production
+
+CMD [ "pm2-runtime", "start", "pm2.json"]
