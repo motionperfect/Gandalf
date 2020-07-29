@@ -132,6 +132,32 @@ VALUES (1, 'Safe'),
 
 -- --------------------------------------------------------
 
+INSERT INTO Disorders(`id`, `name`)
+VALUES (1, 'Costochondritis'),
+       (2, 'Idiopathic skeletal hyperostosis'),
+       (3, 'Enthesophytes'),
+       (4, 'Dead arm syndrome'),
+       (5, 'Repetitive strain injury'),
+       (6, 'Cumulative trauma disorders'),
+       (7, 'Radiculitis'),
+       (8, 'Hill–Sachs lesion'),
+       (9, 'Knee pain'),
+       (10, 'Microtrauma'),
+       (11, 'Carpal tunnel syndrome'),
+       (12, 'Peroneal nerve paralysis'),
+       (13, 'Radial tunnel syndrome'),
+       (14, 'Sacroiliac joint syndrome'),
+       (15, 'Sternoclavicular separation'),
+       (16, 'Tendinitis Shoulder'),
+       (17, 'Bursitis'),
+       (18, 'Impingement syndrome'),
+       (19, 'Rotator cuff tears'),
+       (20, 'SLAP tear'),
+       (21, 'Iliopsoas tendinitis'),
+       (22, 'Ulnar nerve entrapment');
+       
+-- --------------------------------------------------------
+
 INSERT INTO DisordersBodyParts(`disorderId`, `bodyPartId`)
 VALUES (1, 1),
        (2, 2),
@@ -172,32 +198,6 @@ VALUES (1, 1),
        (21, 13),
        (22, 16),
        (22, 17);
-
--- --------------------------------------------------------
-
-INSERT INTO Disorders(`id`, `name`)
-VALUES (1, 'Costochondritis'),
-       (2, 'Idiopathic skeletal hyperostosis'),
-       (3, 'Enthesophytes'),
-       (4, 'Dead arm syndrome'),
-       (5, 'Repetitive strain injury'),
-       (6, 'Cumulative trauma disorders'),
-       (7, 'Radiculitis'),
-       (8, 'Hill–Sachs lesion'),
-       (9, 'Knee pain'),
-       (10, 'Microtrauma'),
-       (11, 'Carpal tunnel syndrome'),
-       (12, 'Peroneal nerve paralysis'),
-       (13, 'Radial tunnel syndrome'),
-       (14, 'Sacroiliac joint syndrome'),
-       (15, 'Sternoclavicular separation'),
-       (16, 'Tendinitis Shoulder'),
-       (17, 'Bursitis'),
-       (18, 'Impingement syndrome'),
-       (19, 'Rotator cuff tears'),
-       (20, 'SLAP tear'),
-       (21, 'Iliopsoas tendinitis'),
-       (22, 'Ulnar nerve entrapment');
 
 -- --------------------------------------------------------
 
