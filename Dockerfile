@@ -19,7 +19,7 @@ COPY nest-cli.json ./
 COPY tsconfig*.json ./
 COPY src ./
 
-RUN npm install -g glob
+RUN npm install glob
 
 RUN npm run build
 
