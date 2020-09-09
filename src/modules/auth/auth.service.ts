@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
+import moment from "moment";
 
 import { LoggedInDto, SignInDto, SignUpDto } from "./dto";
 import { LocalAccountEntity } from "./entities";
@@ -39,14 +40,14 @@ export class AuthService {
   }
 
   async signIn (loggedUser: UserEntity): Promise<LoggedInDto> {
-    const expiresIn = this.jwtConfigService.lifetime;
+    const expiresIn = this.jwtConfigService.lifetime.asMinutes();
 
     return LoggedInDto.from({
-      token_type: "Bearer",
-      access_token: await this.jwtService.signAsync({
-        sub: loggedUser.id
-      }, { algorithm: "ES256", keyid: this.jwtConfigService.signingKeyId }),
-      expires_in: Math.floor(Date.now() / 1000) + expiresIn
+      "token_type": "Bearer",
+      "access_token": await this.jwtService.signAsync({
+        "sub": loggedUser.id
+      }, { algorithm: "ES256", keyid: this.jwtConfigService.kid }),
+      "expires_in": moment().add(expiresIn, 'minutes').unix()
     });
   }
 

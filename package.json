@@ -41,14 +41,15 @@
     "password-validator": "^5.0.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.4",
-    "typeorm": "^0.2.25"
+    "typeorm": "^0.2.25",
+    "cron": "^1.8.2"
   },
   "devDependencies": {
-    "rimraf": "^3.0.2",
     "@nestjs/cli": "^7.0.0",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.0",
     "@types/bcrypt": "^3.0.0",
+    "@types/cron": "^1.7.2",
     "@types/express": "^4.17.3",
     "@types/hapi__joi": "^17.1.0",
     "@types/jest": "25.1.4",
@@ -63,6 +64,7 @@
     "eslint-plugin-import": "^2.20.1",
     "jest": "^25.1.0",
     "prettier": "^1.19.1",
+    "rimraf": "^3.0.2",
     "supertest": "^4.0.2",
     "ts-jest": "25.2.1",
     "ts-loader": "^6.2.1",
