@@ -25,7 +25,7 @@ export class JWTConfigService implements JwtOptionsFactory, OnModuleInit {
 
   async onModuleInit (): Promise<void> {
     const minutes = this.lifetime.asMinutes();
-    const job = new CronJob(`${minutes} * * JAN *`, () => {
+    const job = new CronJob(`${minutes} 0 * JAN *`, () => {
       const key = this.keyMap.shift();
 
       this.keyStore.remove(key);
