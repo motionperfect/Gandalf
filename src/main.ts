@@ -10,9 +10,6 @@ async function bootstrap () {
   const app = await NestFactory.create(AppModule);
   const appConfigService = app.get(AppConfigService);
 
-  app.setGlobalPrefix(appConfigService.globalPrefix);
-  app.enableCors();
-
   /**
    * This will cause class-validator to use the nestJS module resolution,
    * the fallback option is to spare our self from importing all the

@@ -4,7 +4,6 @@ import { Module } from "@nestjs/common";
 
 import { AppConfigModule } from "./app/app.module";
 import { DatabaseConfigModule } from "./database/database.module";
-import { APIConfigModule } from "./api/api.module";
 
 import { DatabaseConfigService } from "./database/database.service";
 
@@ -14,7 +13,6 @@ import { JWTConfigModule } from "./jwt/jwt.module";
 const Exports = [
   DatabaseConfigModule,
   AppConfigModule,
-  APIConfigModule,
   JWTConfigModule
 ];
 

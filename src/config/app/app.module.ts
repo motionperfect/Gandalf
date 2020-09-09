@@ -1,8 +1,6 @@
 import { ConfigModule as NestConfigModule } from "@nestjs/config";
 import { Module } from "@nestjs/common";
 
-import { APIConfigModule } from "../api/api.module";
-
 import { AppConfigService } from "./app.service";
 
 const Services = [
@@ -11,8 +9,7 @@ const Services = [
 
 @Module({
   imports: [
-    NestConfigModule,
-    APIConfigModule
+    NestConfigModule
   ],
   providers: [
     ...Services
