@@ -1,21 +1,13 @@
-import { ConfigModule as NestConfigModule } from "@nestjs/config";
-import { Module } from "@nestjs/common";
+import { ConfigModule as NestConfigModule } from '@nestjs/config';
+import { Module } from '@nestjs/common';
 
-import { DatabaseConfigService } from "./database.service";
+import { DatabaseConfigService } from './database.service';
 
-const Services = [
-  DatabaseConfigService
-];
+const Services = [DatabaseConfigService];
 
 @Module({
-  imports: [
-    NestConfigModule
-  ],
-  providers: [
-    ...Services
-  ],
-  exports: [
-    ...Services
-  ]
+  imports: [NestConfigModule],
+  providers: [...Services],
+  exports: [...Services],
 })
 export class DatabaseConfigModule {}

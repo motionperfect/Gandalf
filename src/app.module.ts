@@ -1,27 +1,17 @@
-import { Module } from "@nestjs/common";
-import { ScheduleModule } from "@nestjs/schedule";
+import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 
-import { AuthModule } from "./modules/auth/auth.module";
-import { ConfigModule } from "./config/config.module";
+import { AuthModule } from './modules/auth/auth.module';
+import { ConfigModule } from './config/config.module';
 
-import { AppService } from "./app.service";
-import { AppController } from "./app.controller";
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
 
-const Services = [
-  AppService
-];
+const Services = [AppService];
 
 @Module({
-  imports: [
-    ConfigModule,
-    ScheduleModule.forRoot(),
-    AuthModule
-  ],
-  controllers: [
-    AppController
-  ],
-  providers: [
-    ...Services
-  ]
+  imports: [ConfigModule, ScheduleModule.forRoot(), AuthModule],
+  controllers: [AppController],
+  providers: [...Services],
 })
 export class AppModule {}

@@ -3,12 +3,11 @@ import {
   IsNumber,
   IsOptional,
   IsPositive,
-  IsString
-} from "class-validator";
-import { Expose, plainToClass } from "class-transformer";
+  IsString,
+} from 'class-validator';
+import { Expose, plainToClass } from 'class-transformer';
 
 export class LoggedInDto implements Readonly<LoggedInDto> {
-
   /**
    * Stored in-memory on client side
    */
@@ -43,11 +42,9 @@ export class LoggedInDto implements Readonly<LoggedInDto> {
   @IsOptional()
   id_token?: string;
 
-  public static from (dto: Partial<LoggedInDto>) {
-    return plainToClass<LoggedInDto, Partial<LoggedInDto>>(
-      LoggedInDto,
-      dto,
-      { excludeExtraneousValues: true }
-    );
+  public static from(dto: Partial<LoggedInDto>) {
+    return plainToClass<LoggedInDto, Partial<LoggedInDto>>(LoggedInDto, dto, {
+      excludeExtraneousValues: true,
+    });
   }
 }

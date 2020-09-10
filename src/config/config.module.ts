@@ -1,26 +1,22 @@
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { ConfigModule as NestConfigModule } from "@nestjs/config";
-import { Module } from "@nestjs/common";
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule as NestConfigModule } from '@nestjs/config';
+import { Module } from '@nestjs/common';
 
-import { AppConfigModule } from "./app/app.module";
-import { DatabaseConfigModule } from "./database/database.module";
+import { AppConfigModule } from './app/app.module';
+import { DatabaseConfigModule } from './database/database.module';
 
-import { DatabaseConfigService } from "./database/database.service";
+import { DatabaseConfigService } from './database/database.service';
 
-import schema from "./schema";
-import { JWTConfigModule } from "./jwt/jwt.module";
+import schema from './schema';
+import { JWTConfigModule } from './jwt/jwt.module';
 
-const Exports = [
-  DatabaseConfigModule,
-  AppConfigModule,
-  JWTConfigModule
-];
+const Exports = [DatabaseConfigModule, AppConfigModule, JWTConfigModule];
 
 @Module({
   imports: [
     NestConfigModule.forRoot({
       validationSchema: schema,
-      expandVariables: true
+      expandVariables: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [DatabaseConfigModule],
@@ -31,14 +27,14 @@ const Exports = [
         username: config.user,
         password: config.password,
         database: config.database,
-        entities: ["dist/**/**.entity{.ts,.js}"],
+        entities: ['dist/**/**.entity{.ts,.js}'],
         retryDelay: 5000,
-        synchronize: config.sync
+        synchronize: config.sync,
       }),
-      inject: [DatabaseConfigService]
+      inject: [DatabaseConfigService],
     }),
-    ...Exports
+    ...Exports,
   ],
-  exports: Exports
+  exports: Exports,
 })
 export class ConfigModule {}

@@ -2,34 +2,28 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  PrimaryGeneratedColumn
-} from "typeorm";
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity({ name: "Users", synchronize: false })
+@Entity({ name: 'Users', synchronize: false })
 export class UserEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   readonly id: string;
 
-  @Column(
-    "varchar",
-    {
-      length: 320,
-      unique: true
-    })
+  @Column('varchar', {
+    length: 320,
+    unique: true,
+  })
   email: string;
 
-  @Column(
-    "boolean",
-    {
-      default: false
-    })
+  @Column('boolean', {
+    default: false,
+  })
   isEmailVerified: boolean;
 
-  @Column(
-    "boolean",
-    {
-      default: false
-    })
+  @Column('boolean', {
+    default: false,
+  })
   isBanned: boolean;
 
   @CreateDateColumn()

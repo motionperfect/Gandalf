@@ -1,23 +1,21 @@
-import { Module } from "@nestjs/common";
-import { PassportModule } from "@nestjs/passport";
-import { JwtModule } from "@nestjs/jwt";
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { Module } from '@nestjs/common';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AuthService } from "./auth.service";
-import { LocalStrategy } from "./strategies";
-import { AuthController } from "./auth.controller";
-import { LocalAccountEntity } from "./entities";
+import { AuthService } from './auth.service';
+import { LocalStrategy } from './strategies';
+import { AuthController } from './auth.controller';
+import { LocalAccountEntity } from './entities';
 
-import { AppConfigModule } from "../../config/app/app.module";
-import { JWTConfigModule } from "../../config/jwt/jwt.module";
-import { UserModule } from "../user/user.module";
+import { AppConfigModule } from '../../config/app/app.module';
+import { JWTConfigModule } from '../../config/jwt/jwt.module';
+import { UserModule } from '../user/user.module';
 
-import { JWTConfigService } from "../../config/jwt/jwt.service";
+import { JWTConfigService } from '../../config/jwt/jwt.service';
 
 /* Export services */
-const Services = [
-  AuthService
-];
+const Services = [AuthService];
 
 @Module({
   imports: [
@@ -28,16 +26,11 @@ const Services = [
     PassportModule,
     JwtModule.registerAsync({
       imports: [JWTConfigModule],
-      useExisting: JWTConfigService
-    })
+      useExisting: JWTConfigService,
+    }),
   ],
   controllers: [AuthController],
-  providers: [
-    ...Services,
-    LocalStrategy
-  ],
-  exports: [
-    ...Services
-  ]
+  providers: [...Services, LocalStrategy],
+  exports: [...Services],
 })
 export class AuthModule {}

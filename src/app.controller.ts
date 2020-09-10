@@ -1,24 +1,24 @@
-import { Controller, Get, HttpCode, HttpStatus } from "@nestjs/common";
+import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
 
-import { AppService } from "./app.service";
-import { JWTConfigService } from "./config/jwt/jwt.service";
+import { AppService } from './app.service';
+import { JWTConfigService } from './config/jwt/jwt.service';
 
 @Controller()
 export class AppController {
-  constructor (
+  constructor(
     private readonly appService: AppService,
-    private readonly jwtConfigService: JWTConfigService
+    private readonly jwtConfigService: JWTConfigService,
   ) {}
 
-  @Get("/certs")
+  @Get('/certs')
   @HttpCode(HttpStatus.OK)
-  certificates () {
+  certificates() {
     return this.jwtConfigService.publicKeys;
   }
 
-  @Get("/ping")
+  @Get('/ping')
   @HttpCode(HttpStatus.OK)
-  ping () {
+  ping() {
     return this.appService.ping();
   }
 }

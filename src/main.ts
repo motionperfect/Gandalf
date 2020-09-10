@@ -1,12 +1,12 @@
-import { useContainer } from "class-validator";
-import { ValidationPipe } from "@nestjs/common";
-import { NestFactory } from "@nestjs/core";
+import { useContainer } from 'class-validator';
+import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 
-import { AppModule } from "./app.module";
+import { AppModule } from './app.module';
 
-import { AppConfigService } from "./config/app/app.service";
+import { AppConfigService } from './config/app/app.service';
 
-async function bootstrap () {
+async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const appConfigService = app.get(AppConfigService);
 
@@ -17,10 +17,12 @@ async function bootstrap () {
    */
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-  app.useGlobalPipes(new ValidationPipe({
-    transform: true,
-    forbidUnknownValues: true
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      forbidUnknownValues: true,
+    }),
+  );
   await app.listen(appConfigService.port);
 }
 

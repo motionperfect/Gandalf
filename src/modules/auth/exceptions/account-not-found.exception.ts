@@ -1,13 +1,12 @@
-import { NotFoundException } from "@nestjs/common";
+import { NotFoundException } from '@nestjs/common';
 
 export class LocalAccountNotFoundException extends NotFoundException {
-
   /**
    * @returns {UserNotFoundException}
    */
-  static authorized (): LocalAccountNotFoundException {
+  static authorized(): LocalAccountNotFoundException {
     return new LocalAccountNotFoundException(
-      "The email or password is incorrect. Try again, please."
+      'The email or password is incorrect. Try again, please.',
     );
   }
 
@@ -15,9 +14,9 @@ export class LocalAccountNotFoundException extends NotFoundException {
    * @param {string} id
    * @returns {UserNotFoundException}
    */
-  static fromId (id: string): LocalAccountNotFoundException {
+  static fromId(id: string): LocalAccountNotFoundException {
     return new LocalAccountNotFoundException(
-      "Local account with ID #" + id + " not found."
+      'Local account with ID #' + id + ' not found.',
     );
   }
 }

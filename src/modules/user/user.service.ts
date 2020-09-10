@@ -1,23 +1,22 @@
-import { Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
-import { InjectRepository } from "@nestjs/typeorm";
+import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
-import { UserEntity } from "./entities";
-import { UserNotFoundException } from "./exceptions";
-import { CreateUserDto, UserDto } from "./dto";
+import { UserEntity } from './entities';
+import { UserNotFoundException } from './exceptions';
+import { CreateUserDto, UserDto } from './dto';
 
 /**
  * TypeORM user repository implementation
  */
 @Injectable()
 export class UserService {
-
-  constructor (
+  constructor(
     @InjectRepository(UserEntity)
-    private readonly repository: Repository<UserEntity>) {
-  }
+    private readonly repository: Repository<UserEntity>,
+  ) {}
 
-  async find (id: string): Promise<UserEntity> {
+  async find(id: string): Promise<UserEntity> {
     const foundUser = await this.repository.findOne(id);
 
     if (!foundUser) {
@@ -26,9 +25,9 @@ export class UserService {
     return foundUser;
   }
 
-  async findByEmail (email: string): Promise<UserEntity> {
+  async findByEmail(email: string): Promise<UserEntity> {
     const foundUser = await this.repository.findOne({
-      where: { email: email }
+      where: { email: email },
     });
 
     if (!foundUser) {
@@ -37,12 +36,11 @@ export class UserService {
     return foundUser;
   }
 
-  create (createUserDto: CreateUserDto): Promise<UserEntity> {
+  create(createUserDto: CreateUserDto): Promise<UserEntity> {
     return this.repository.save(createUserDto);
   }
 
-  update (userDto: UserDto): Promise<UserEntity> {
+  update(userDto: UserDto): Promise<UserEntity> {
     return this.repository.save(userDto);
   }
 }
-
