@@ -1,40 +1,40 @@
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
+import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 
-const toTitleCase = s =>
-  s.substr(0, 1).toUpperCase() + s.substr(1).toLowerCase();
+const secondsToMilliseconds = seconds => seconds * 1000;
+const toTitleCase = str =>
+  str
+    .split('')
+    .map((char, idx) => (!idx ? char.toUpperCase() : char))
+    .join('');
 
 @Injectable()
-export class DatabaseConfigService {
+export class DatabaseConfigService implements TypeOrmOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
 
-  get provider(): any {
-    return this.configService.get<string>('DB_PROVIDER');
+  createTypeOrmOptions(connectionName?: string): TypeOrmModuleOptions {
+    return {
+      type: this.configService.get<any>('DB_PROVIDER'),
+      host: this.configService.get<string>('DB_HOST'),
+      port: this.configService.get<number>('DB_PORT'),
+      username: this.configService.get<string>('DB_USER'),
+      password: this.configService.get<string>('DB_PASSWORD'),
+      database: this.database,
+      entities: ['dist/**/**.entity{.ts,.js}'],
+      retryDelay: secondsToMilliseconds(10),
+      synchronize: this.sync,
+      logging: ['query'],
+    };
   }
 
-  get host(): string {
-    return this.configService.get<string>('DB_HOST');
-  }
-
-  get port(): number {
-    return this.configService.get<number>('DB_PORT');
-  }
-
-  get user(): string {
-    return this.configService.get<string>('DB_USER');
-  }
-
-  get password(): string {
-    return this.configService.get<string>('DB_PASSWORD');
+  get sync(): boolean {
+    return this.configService.get<string>('TYPEORM_SYNCHRONIZE') === 'true';
   }
 
   get database(): string {
     const schema = this.configService.get<string>('DB_SCHEMA');
 
     return toTitleCase(schema);
-  }
-
-  get sync(): boolean {
-    return this.configService.get<boolean>('TYPEORM_SYNCHRONIZE');
   }
 }

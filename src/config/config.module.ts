@@ -4,13 +4,13 @@ import { Module } from '@nestjs/common';
 
 import { AppConfigModule } from './app/app.module';
 import { DatabaseConfigModule } from './database/database.module';
+import { JWTConfigModule } from './jwt/jwt.module';
 
 import { DatabaseConfigService } from './database/database.service';
 
 import schema from './schema';
-import { JWTConfigModule } from './jwt/jwt.module';
 
-const Exports = [DatabaseConfigModule, AppConfigModule, JWTConfigModule];
+const Modules = [DatabaseConfigModule, AppConfigModule, JWTConfigModule];
 
 @Module({
   imports: [
@@ -20,21 +20,10 @@ const Exports = [DatabaseConfigModule, AppConfigModule, JWTConfigModule];
     }),
     TypeOrmModule.forRootAsync({
       imports: [DatabaseConfigModule],
-      useFactory: (config: DatabaseConfigService) => ({
-        type: config.provider,
-        host: config.host,
-        port: config.port,
-        username: config.user,
-        password: config.password,
-        database: config.database,
-        entities: ['dist/**/**.entity{.ts,.js}'],
-        retryDelay: 5000,
-        synchronize: config.sync,
-      }),
-      inject: [DatabaseConfigService],
+      useExisting: DatabaseConfigService,
     }),
-    ...Exports,
+    ...Modules,
   ],
-  exports: Exports,
+  exports: Modules,
 })
 export class ConfigModule {}
