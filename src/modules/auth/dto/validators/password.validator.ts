@@ -21,7 +21,7 @@ const schema = new PasswordValidator()
 
 @ValidatorConstraint({ async: false })
 export class ComplexPasswordConstraint implements ValidatorConstraintInterface {
-  validate(text: string/* , args: ValidationArguments */) {
+  validate(text: string /* , args: ValidationArguments */) {
     return schema.validate(text) as boolean;
   }
 

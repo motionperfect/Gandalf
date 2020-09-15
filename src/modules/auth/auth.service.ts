@@ -47,14 +47,14 @@ export class AuthService {
     const expiresIn = this.jwtConfigService.lifetime.asMinutes();
 
     return LoggedInDto.from({
-      'token_type': 'Bearer',
-      'access_token': await this.jwtService.signAsync(
+      token_type: 'Bearer',
+      access_token: await this.jwtService.signAsync(
         {
-          'sub': loggedUser.id,
+          sub: loggedUser.id,
         },
         { algorithm: 'ES256', keyid: this.jwtConfigService.kid },
       ),
-      'expires_in': moment()
+      expires_in: moment()
         .add(expiresIn, 'minutes')
         .unix(),
     });

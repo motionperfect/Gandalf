@@ -13,7 +13,7 @@ import { UserService } from '../../user.service';
 export class UniqueEmailConstraint implements ValidatorConstraintInterface {
   constructor(private readonly userService: UserService) {}
 
-  validate(email: any/* , args: ValidationArguments */) {
+  validate(email: any /* , args: ValidationArguments */) {
     return this.userService
       .findByEmail(email)
       .then(user => !user)
