@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity({ name: 'Users', synchronize: false })
+@Entity({ name: 'Users' })
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   readonly id: string;

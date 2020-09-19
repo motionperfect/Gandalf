@@ -9,12 +9,12 @@ import {
 
 import { UserEntity } from '../../user/entities';
 
-@Entity({ name: 'LocalAccounts', synchronize: false })
+@Entity({ name: 'LocalAccounts' })
 export class LocalAccountEntity {
   @OneToOne(() => UserEntity, {
     primary: true,
   })
-  @JoinColumn()
+  @JoinColumn({ name: 'userId' })
   user: UserEntity;
 
   @Column('datetime', {
