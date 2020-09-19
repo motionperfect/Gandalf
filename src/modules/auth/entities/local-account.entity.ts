@@ -42,6 +42,9 @@ export class LocalAccountEntity {
   @Generated('uuid')
   emailConfirmationToken: string;
 
-  @CreateDateColumn()
-  readonly createdAt: Date;
+  @CreateDateColumn({
+    update: false,
+    type: 'datetime',
+  })
+  createdAt: Date;
 }

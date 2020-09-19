@@ -8,7 +8,7 @@ import {
 @Entity({ name: 'Users' })
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
-  readonly id: string;
+  id: string;
 
   @Column('varchar', {
     length: 320,
@@ -26,6 +26,9 @@ export class UserEntity {
   })
   isBanned: boolean;
 
-  @CreateDateColumn()
-  readonly createdAt: Date;
+  @CreateDateColumn({
+    type: 'datetime',
+    update: false,
+  })
+  createdAt: Date;
 }
