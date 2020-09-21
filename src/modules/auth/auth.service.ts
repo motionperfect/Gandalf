@@ -19,7 +19,7 @@ import { AppConfigService } from '../../config/app/app.service';
 export class AuthService {
   constructor(
     @InjectRepository(LocalAccountEntity)
-    private readonly repository: Repository<LocalAccountEntity>,
+    private readonly localAccountRepository: Repository<LocalAccountEntity>,
     private readonly userService: UserService,
     private readonly jwtConfigService: JWTConfigService,
     private readonly appConfigService: AppConfigService,
@@ -28,7 +28,7 @@ export class AuthService {
 
   // TODO: incomplete implementation
   async validateUser({ password, email }: SignInDto): Promise<UserEntity> {
-    const account = await this.repository
+    const account = await this.localAccountRepository
       .createQueryBuilder('account')
       .innerJoinAndSelect('account.user', 'user')
       .where('user.email = :email', { email })
@@ -64,7 +64,7 @@ export class AuthService {
     const createUserDto = CreateUserDto.from(signUpDto.user);
     const createdUser = await this.userService.create(createUserDto);
 
-    await this.repository.save({
+    await this.localAccountRepository.save({
       user: createdUser,
       password: await bcrypt.hash(
         signUpDto.password,
