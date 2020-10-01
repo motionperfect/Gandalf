@@ -1,7 +1,7 @@
 import { Expose, plainToClass } from 'class-transformer';
 import { IsEmail } from 'class-validator';
 
-import { IsUniqueEmail } from './validators';
+import { IsUniqueEmail } from './validator';
 
 export class CreateUserDto implements Readonly<CreateUserDto> {
   @IsEmail()

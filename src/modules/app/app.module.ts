@@ -4,8 +4,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from '../auth/auth.module';
 import { ConfigModule } from '../../config/config.module';
 
-import { AppService } from './app.service';
-import { AppController } from './app.controller';
+import { AppService, AppController } from '.';
 
 const Services = [AppService];
 

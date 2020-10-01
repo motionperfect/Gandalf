@@ -1,32 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { EntityManager } from 'typeorm';
 
-import { UserEntity } from './entities';
-import { UserNotFoundException } from './exceptions';
-import { CreateUserDto, UserDto } from './dto';
+import { RoleService } from '../role';
 
-/**
- * TypeORM user repository implementation
- */
+import { UserEntity, UserRepository } from './repository';
+
+import { UserNotFoundException } from './exception';
+
+import { CreateUserDto } from './dto';
+
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly repository: Repository<UserEntity>,
+    private readonly userRepository: UserRepository,
+    private readonly roleService: RoleService
   ) {}
 
-  async find(id: string): Promise<UserEntity> {
-    const foundUser = await this.repository.findOne(id);
+  async findById(userId: string): Promise<UserEntity> {
+    const foundUser = await this.userRepository.findOne(userId);
 
     if (!foundUser) {
-      throw UserNotFoundException.fromId(id);
+      throw UserNotFoundException.fromId(userId);
     }
     return foundUser;
   }
 
   async findByEmail(email: string): Promise<UserEntity> {
-    const foundUser = await this.repository.findOne({
+    const foundUser = await this.userRepository.findOne({
       where: { email: email },
     });
 
@@ -36,11 +36,15 @@ export class UserService {
     return foundUser;
   }
 
-  create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    return this.repository.save(createUserDto);
-  }
+  async create(
+    createUserDto: CreateUserDto,
+    manager: EntityManager = this.userRepository.manager,
+  ): Promise<UserEntity> {
+    const userRepository = manager.getCustomRepository(UserRepository);
+    const newUser = userRepository.create(createUserDto);
+    const roles = await this.roleService.findAll();
 
-  update(userDto: UserDto): Promise<UserEntity> {
-    return this.repository.save(userDto);
+    newUser.roles = roles.filter((role) => role.isDefault === true);
+    return userRepository.save(newUser);
   }
 }

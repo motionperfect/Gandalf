@@ -6,7 +6,7 @@ import { AppConfigModule } from './app/app.module';
 import { DatabaseConfigModule } from './database/database.module';
 import { JWTConfigModule } from './jwt/jwt.module';
 
-import { DatabaseConfigService } from './database/database.service';
+import { DatabaseConfigService } from './database';
 
 import schema from './schema';
 

@@ -1,8 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
+import moment from 'moment';
 
-const secondsToMilliseconds = seconds => seconds * 1000;
 const toTitleCase = str =>
   str
     .split('')
@@ -22,9 +22,12 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
       password: this.configService.get<string>('DB_PASSWORD'),
       database: this.database,
       entities: ['dist/**/**.entity{.ts,.js}'],
-      retryDelay: secondsToMilliseconds(10),
+      retryDelay: moment.duration(10, 'seconds').asMilliseconds(),
       synchronize: this.sync,
       logging: ['query'],
+      cache: {
+        duration: moment.duration(15, 'minutes').asMilliseconds()
+      }
     };
   }
 

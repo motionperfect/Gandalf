@@ -1,5 +1,5 @@
 {
-  "name": "Authentication",
+  "name": "Gandalf",
   "script": "dist/main.js",
   "instances": "1",
   "env": {

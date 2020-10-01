@@ -7,42 +7,49 @@ import {
   OneToOne,
 } from 'typeorm';
 
-import { UserEntity } from '../../user/entities';
+import { UserEntity } from '../../user/repository';
 
-@Entity({ name: 'LocalAccounts' })
+@Entity({ name: 'local_account' })
 export class LocalAccountEntity {
   @OneToOne(() => UserEntity, {
     primary: true,
   })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_uuid' })
   user: UserEntity;
 
   @Column('datetime', {
+    name: 'last_password_failure_at',
     nullable: true,
   })
-  lastPasswordFailureDate: Date;
+  lastPasswordFailureAt: Date;
 
   @Column('tinyint', {
+    name: 'login_failure_since_last_success',
     unsigned: true,
     default: 0,
   })
   loginFailureSinceLastSuccess: number;
 
   @Column('varchar', {
+    name: 'password',
     length: 64,
   })
   password: string;
 
   @Column('datetime', {
+    name: 'last_password_change_at',
     nullable: true,
   })
-  lastPasswordChangeDate: Date;
+  lastPasswordChangeAt: Date;
 
-  @Column()
+  @Column('char', {
+    name: 'email_confirmation_token',
+  })
   @Generated('uuid')
   emailConfirmationToken: string;
 
   @CreateDateColumn({
+    name: 'created_at',
     update: false,
     type: 'datetime',
   })
