@@ -1,11 +1,7 @@
 import * as Joi from '@hapi/joi';
 
-import AppSchema from './app/app.schema';
-import DatabaseSchema from './database/database.schema';
-import JWTSchema from './jwt/jwt.schema';
+import { schema as app } from './app';
+import { schema as security } from './security';
+import { schema as io } from './IO';
 
-export default Joi.object({
-  ...AppSchema,
-  ...DatabaseSchema,
-  ...JWTSchema,
-});
+export const schema = Joi.object({ ...app, ...security, ...io });

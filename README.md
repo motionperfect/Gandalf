@@ -25,13 +25,21 @@ Stateless authentication service using JWT standard, developed with Nest framewo
 
 ## Usage
 
-#### Required environment variables
-* DB_HOST - Database host
-* DB_PORT - Database host port
-* DB_PROVIDER - Database type
+#### Environment variables
+##### Required
 * DB_SCHEMA - Database name to connect to
 * DB_USER - Database username
 * DB_PASSWORD - Database password
+* TOKEN_ISSUER - identifies the principal that issued the JWT
+* TOKEN_AUDIENCE - Identifies the recipients that the JWT is intended for
+##### Optional
+* APP_PORT - Application port (default: 3000)
+* BCRYPT_ROUNDS - Number of rounds for hashing a password (default: 12)
+* DB_HOST - Database host (default: localhost)
+* DB_PROVIDER - Database type (default: mysql)
+* DB_PORT - Database host port (default: 3306)
+* TYPEORM_SYNCHRONIZE - Synchronize entities to database (default: false)
+* TOKEN_EXPIRATION - JWT expiration time in minutes (default: 15)
 
 #### Running the app
 
@@ -60,6 +68,8 @@ npm run start:prod
 * E-mail verification for local accounts
 * Check if user banned
 * Move keystore from in-memory to external service (ex: redis)
+* Extract scheduler logic from jwtService to workerService
+* Better error handling
 
 ## Known bugs
 

@@ -1,16 +1,12 @@
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 
 import { AppConfigModule } from './app/app.module';
-import { DatabaseConfigModule } from './database/database.module';
-import { JWTConfigModule } from './jwt/jwt.module';
+import { SecurityConfigModule } from './security/security.module';
+import { WorkerConfigModule } from './worker/worker.module';
+import { IoConfigModule } from './IO/io.module';
 
-import { DatabaseConfigService } from './database';
-
-import schema from './schema';
-
-const Modules = [DatabaseConfigModule, AppConfigModule, JWTConfigModule];
+import { schema } from './schema';
 
 @Module({
   imports: [
@@ -18,12 +14,10 @@ const Modules = [DatabaseConfigModule, AppConfigModule, JWTConfigModule];
       validationSchema: schema,
       expandVariables: true,
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [DatabaseConfigModule],
-      useExisting: DatabaseConfigService,
-    }),
-    ...Modules,
+    AppConfigModule,
+    SecurityConfigModule,
+    IoConfigModule,
+    WorkerConfigModule,
   ],
-  exports: Modules,
 })
 export class ConfigModule {}

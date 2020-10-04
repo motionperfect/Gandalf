@@ -1,6 +1,6 @@
 import * as Joi from '@hapi/joi';
 
-export default {
+export const schema = {
   APP_PORT: Joi.number()
     .integer()
     .min(80)
@@ -12,5 +12,5 @@ export default {
     .positive()
     .min(8)
     .max(16)
-    .default(10),
+    .default(12),
 };
