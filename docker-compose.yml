@@ -1,0 +1,60 @@
+version: "3.4"
+services:
+
+  #
+  # [ server stack ]
+  #
+  gandalf:
+    restart: on-failure
+    build:
+      context: .
+      target: development
+    command: npm run start:debug
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - backend
+      - database
+    ports:
+      - "9229:9229/tcp"
+      - "3000:80/tcp"
+
+  database:
+    image: mysql:8
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ADMIN_PASSWORD}
+      MYSQL_DATABASE: ${DB_SCHEMA}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - database
+      - administration
+    volumes:
+      - database:/var/lib/mysql
+
+  database-gui:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: ${DB_HOST}
+    ports: # HOST:CONTAINER
+      - "8080:80/tcp"
+    networks:
+      - administration
+
+#
+# [ volumes definition ]
+#
+# creates Docker volumes which can be mounted by other containers too e.g. for backup
+#
+volumes:
+  database:
+
+#
+# [ networks definition ]
+#
+networks:
+  backend:
+  administration:
+  database:
