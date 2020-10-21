@@ -14,8 +14,7 @@ RUN npm rebuild bcrypt --build-from-source
 # Uninstall building dependencies
 RUN apk del make gcc g++ python
 
-COPY .env ./
-COPY nest-cli.json ./
+COPY nest-cli.json .env* ./
 COPY tsconfig*.json ./
 COPY src ./
 
@@ -31,8 +30,7 @@ WORKDIR /usr/src/app
 # Bundle APP files
 COPY --from=development /usr/src/app/dist ./dist
 COPY package*.json ./
-COPY pm2.json ./
-COPY .env ./
+COPY pm2.json .env* ./
 
 # Install app dependencies
 RUN npm install --only=production
