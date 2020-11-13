@@ -6,11 +6,13 @@ import {
   IsString,
 } from 'class-validator';
 import { Expose, plainToClass } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class LoggedInDto implements Readonly<LoggedInDto> {
   /**
    * Stored in-memory on client side
    */
+  @ApiProperty()
   @IsJWT()
   @Expose()
   access_token: string;
@@ -18,11 +20,13 @@ export class LoggedInDto implements Readonly<LoggedInDto> {
   /**
    * AT expiration in seconds
    */
+  @ApiProperty()
   @IsNumber()
   @IsPositive()
   @Expose()
   expires_in: number;
 
+  @ApiProperty()
   @IsString()
   @Expose()
   token_type: string;
@@ -31,6 +35,7 @@ export class LoggedInDto implements Readonly<LoggedInDto> {
    * TODO: Implement rotating refresh token
    * https://auth0.com/docs/tokens/concepts/refresh-token-rotation
    */
+  @ApiProperty()
   @IsString()
   @IsOptional()
   refresh_token?: string;
@@ -38,6 +43,7 @@ export class LoggedInDto implements Readonly<LoggedInDto> {
   /**
    * https://openid.net/specs/openid-connect-core-1_0.html#IDToken
    */
+  @ApiProperty()
   @IsJWT()
   @IsOptional()
   id_token?: string;
